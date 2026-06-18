@@ -1,7 +1,7 @@
 AGENTS*
 SKILLS*
 node_modules
-
+.opencode
 .output
 *.log
 logs

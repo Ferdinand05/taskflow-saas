@@ -1,33 +1,21 @@
 <script setup lang="ts">
-import type { DropdownMenuItem, NavigationMenuItem, SidebarProps } from "@nuxt/ui";
+import type { NavigationMenuItem, DropdownMenuItem, SidebarProps } from "@nuxt/ui";
 
-// Ignore the props for the example
 defineProps<Pick<SidebarProps, "variant" | "collapsible" | "side">>();
 
 const open = ref(true);
 const items: NavigationMenuItem[] = [
-  {
-    label: "Home",
-    icon: "i-lucide-house",
-    active: true,
-  },
-  {
-    label: "Inbox",
-    icon: "i-lucide-inbox",
-    badge: "4",
-  },
-  {
-    label: "Contacts",
-    icon: "i-lucide-users",
-  },
+  { label: "Dashboard", icon: "i-lucide-layout-dashboard", to: "/", active: true },
+  { label: "Workspaces", icon: "i-lucide-building-2", to: "/workspaces" },
+  { label: "Projects", icon: "i-lucide-folder-kanban", to: "/projects" },
+  { label: "Boards", icon: "i-lucide-columns-3", to: "/boards" },
+  { label: "Tasks", icon: "i-lucide-square-check-big", to: "/tasks" },
+  { label: "Activity Logs", icon: "i-lucide-activity", to: "/activity" },
 ];
 
 const user = ref({
   name: "Benjamin Canac",
-  avatar: {
-    src: "https://github.com/benjamincanac.png",
-    alt: "Benjamin Canac",
-  },
+  avatar: { src: "https://github.com/benjamincanac.png", alt: "Benjamin Canac" },
 });
 const colorMode = useColorMode();
 const userItems = computed<DropdownMenuItem[][]>(() => [
@@ -42,9 +30,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
           type: "checkbox",
           checked: colorMode.value === "light",
           onUpdateChecked(checked: boolean) {
-            if (checked) {
-              colorMode.preference = "light";
-            }
+            if (checked) colorMode.preference = "light";
           },
           onSelect(e: Event) {
             e.preventDefault();
@@ -56,9 +42,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
           type: "checkbox",
           checked: colorMode.value === "dark",
           onUpdateChecked(checked: boolean) {
-            if (checked) {
-              colorMode.preference = "dark";
-            }
+            if (checked) colorMode.preference = "dark";
           },
           onSelect(e: Event) {
             e.preventDefault();
@@ -67,33 +51,17 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
       ],
     },
   ],
-  [
-    {
-      label: "Log out",
-      icon: "i-lucide-log-out",
-    },
-  ],
+  [{ label: "Log out", icon: "i-lucide-log-out" }],
 ]);
 </script>
 
 <template>
   <div class="flex flex-1" :class="[variant === 'inset' && 'bg-neutral-50 dark:bg-neutral-950', side === 'right' && 'flex-row-reverse']">
-    <USidebar
-      v-model:open="open"
-      :variant="variant"
-      collapsible="icon"
-      :side="side"
-      :ui="{
-        container: 'h-full',
-      }"
-      description="Boost your task flow"
-    >
+    <USidebar v-model:open="open" :variant="variant" collapsible="icon" :side="side" :ui="{ container: 'h-full' }" description="Boost your task flow">
       <template #header>
         <UIcon name="i-logos-nuxt-icon" class="size-8" />
       </template>
-
       <UNavigationMenu :items="items" orientation="vertical" :ui="{ link: 'p-1.5 overflow-hidden' }" />
-
       <template #footer>
         <UDropdownMenu :items="userItems" :content="{ align: 'center', collisionPadding: 12 }" :ui="{ content: 'w-(--reka-dropdown-menu-trigger-width) min-w-48' }">
           <UButton
@@ -104,9 +72,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
             variant="ghost"
             square
             class="w-full data-[state=open]:bg-elevated overflow-hidden"
-            :ui="{
-              trailingIcon: 'text-dimmed ms-auto',
-            }"
+            :ui="{ trailingIcon: 'text-dimmed ms-auto' }"
           />
         </UDropdownMenu>
       </template>
@@ -118,8 +84,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
       <div class="h-(--ui-header-height) shrink-0 flex items-center px-4" :class="[variant !== 'floating' && 'border-b border-default', side === 'right' && 'justify-end']">
         <UButton :icon="side === 'left' ? 'i-lucide-panel-left' : 'i-lucide-panel-right'" color="neutral" variant="ghost" aria-label="Toggle sidebar" @click="open = !open" />
       </div>
-
-      <div class="flex-1 p-4">
+      <div class="flex-1 overflow-auto p-4 md:p-6">
         <slot />
       </div>
     </div>
