@@ -1,0 +1,7 @@
+AGENTS*
+SKILLS*
+node_modules
+
+.output
+*.log
+logs
