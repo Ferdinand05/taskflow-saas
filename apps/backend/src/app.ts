@@ -1,26 +1,46 @@
-import express, { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
-import { config } from './config';
-import { routes } from './routes';
-import { AppError } from './utils/errors';
+import express, { Router } from "express";
+import cors from "cors";
+import helmet from "helmet";
+import compression from "compression";
+import routes from "./routes";
+import morgan from "morgan";
 
+import { errorLoggerMiddleware } from "./middlewares/errorLogger.middleware";
+import { loggerMiddleware } from "./middlewares/logger.middleware";
 const app = express();
 
-app.use(cors({ origin: config.corsOrigin, credentials: true }));
+app.use(cors());
+
+// app.use(
+//   cors({
+//     origin: "http://localhost:8080",
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   }),
+// );
+
+app.use(helmet());
+app.use(compression());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use('/api', routes);
+// console logging
+app.use(morgan("dev"));
 
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  if (err instanceof AppError) {
-    res.status(err.statusCode).json({
-      message: err.message,
-      ...('details' in err ? { details: (err as any).details } : {}),
-    });
-  } else {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+// logger
+app.use(loggerMiddleware);
+
+// route
+const router = Router();
+
+router.get("/error", (req, res, next) => {
+  next(new Error("TEST ERROR"));
 });
 
-export { app };
+app.use("/api", routes);
+
+// error logger
+app.use(errorLoggerMiddleware);
+
+export default app;

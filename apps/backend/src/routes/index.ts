@@ -1,8 +1,13 @@
-import { Router } from 'express';
-import { healthController } from '../controllers/health.controller';
+import { Router } from "express";
 
-const routes = Router();
+const router = Router();
 
-routes.get('/health', healthController);
+// health check
+router.get("/health", (_, res) => {
+  res.json({
+    success: true,
+    message: "API Running",
+  });
+});
 
-export { routes };
+export default router;
