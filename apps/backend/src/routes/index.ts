@@ -1,8 +1,8 @@
 import { Router } from "express";
-
+import authRoutes from "../modules/auth/auth.route";
+import workspaceRoutes from "../modules/workspaces/workspace.route";
 const router = Router();
 
-// health check
 router.get("/health", (_, res) => {
   res.json({
     success: true,
@@ -10,4 +10,6 @@ router.get("/health", (_, res) => {
   });
 });
 
+router.use("/auth", authRoutes);
+router.use("/workspaces", workspaceRoutes);
 export default router;

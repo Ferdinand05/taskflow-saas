@@ -1,0 +1,2 @@
+export declare const errorLoggerMiddleware: import("express").ErrorRequestHandler<import("express-serve-static-core").ParamsDictionary, any, any, import("qs").ParsedQs, Record<string, any>>;
+//# sourceMappingURL=errorLogger.middleware.d.ts.map
